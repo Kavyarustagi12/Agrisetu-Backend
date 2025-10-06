@@ -1,6 +1,8 @@
 from flask import Flask,jsonify,request
+from flask_cors import CORS
 import google.generativeai as genai
 app = Flask(__name__)
+CORS(app)  # allow all origins
 genai.configure(api_key="AIzaSyDndkudiwiRg4UC0b7Lf6MZ2G_qHZFI-bc")
 model=genai.GenerativeModel("gemini-2.5-flash")
 response = model.generate_content("Write a poem about the sea in 4 lines")
