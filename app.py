@@ -7,7 +7,7 @@ import re
 app = Flask(__name__)
 CORS(app)  # allow all origins
 
-genai.configure(api_key="YOUR_API_KEY")
+genai.configure(api_key="AIzaSyCr6NV2w1PMUNq4mb2QIa7Ubjt0YG_aOYA")
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 @app.route('/details', methods=['POST'])
