@@ -23,7 +23,8 @@ Example output format:
 {"}"}
 """
     response = model.generate_content(instruction)
-    return response.text
+    print(jsonify(response.text))
+    return jsonify(response.text)
 if __name__ == "__main__":
     print("\nRegistered routes:\n", app.url_map, "\n")
     app.run(debug=True)
