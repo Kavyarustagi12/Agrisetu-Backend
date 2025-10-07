@@ -11,7 +11,17 @@ print(response.text)
 def farmer_details():
     data = request.json
     text = data.get("text", "")
-    instruction="This text which i have send you. Identify the name of the crop, the quantity, and the amount per quintal. Return a json object with the keys 'crop', 'quantity', and 'amount_per_quintal'in this format {'crop':value,'quantity':its value,'amount_per_quintal':its value}. If any information is missing, set its value to null. Here is the text: " + text
+    instruction = f"""
+You are a JSON generator. 
+Extract the crop name, quantity, and amount_per_quintal from this text: "{text}".
+Return ONLY valid JSON, with no explanations, markdown, or extra text.
+Example output format:
+{"{"}
+  "crop": "Mango",
+  "quantity": "50",
+  "amount_per_quintal": "1200"
+{"}"}
+"""
     response = model.generate_content(instruction)
     return response.text
 if __name__ == "__main__":
