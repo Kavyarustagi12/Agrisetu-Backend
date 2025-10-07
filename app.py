@@ -11,11 +11,9 @@ print(response.text)
 def farmer_details():
     data = request.json
     text = data.get("text", "")
-    instruction="This text which i have send you. Identify the name of the crop, the quantity, and the amount per quintal. Return a " \
-    "json object with the keys 'crop', 'quantity', and 'amount_per_quintal'. If any information is missing, set its value to null. " \
-    "Here is the text: " + text
+    instruction="This text which i have send you. Identify the name of the crop, the quantity, and the amount per quintal. Return a json object with the keys 'crop', 'quantity', and 'amount_per_quintal'in this format {'crop':value,'quantity':its value,'amount_per_quintal':its value}. If any information is missing, set its value to null. Here is the text: " + text
     response = model.generate_content(instruction)
-    return jsonify({"response": response.text})
+    return response.text
 if __name__ == "__main__":
     print("\nRegistered routes:\n", app.url_map, "\n")
     app.run(debug=True)
