@@ -2,11 +2,12 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import google.generativeai as genai
 import json
+import re
 
 app = Flask(__name__)
 CORS(app)  # allow all origins
 
-genai.configure(api_key="AIzaSyDndkudiwiRg4UC0b7Lf6MZ2G_qHZFI-bc")
+genai.configure(api_key="YOUR_API_KEY")
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 @app.route('/details', methods=['POST'])
@@ -26,19 +27,26 @@ Example output format:
 }}
 """
 
-    # Call Gemini API
-    response = model.generate_content(instruction)
-    raw_text = response.text.strip()  # remove extra spaces/newlines
-
     try:
-        # Parse the string into JSON
-        json_data = json.loads(raw_text)
-    except json.JSONDecodeError as e:
-        # If Gemini returns invalid JSON, return an error
-        return jsonify({"error": "Invalid JSON returned by API", "raw_text": raw_text}), 500
+        # Call Gemini API
+        response = model.generate_content(instruction)
+        raw_text = response.text.strip()
+
+        # Remove ```json ... ``` or ``` ... ``` wrappers if present
+        cleaned_text = re.sub(r"^```(?:json)?|```$", "", raw_text).strip()
+
+        # Parse JSON safely
+        json_data = json.loads(cleaned_text)
+
+    except Exception as e:
+        # Always return JSON, even on error
+        json_data = {
+            "error": "Failed to parse Gemini response",
+            "raw_text": raw_text,
+            "exception": str(e)
+        }
 
     return jsonify(json_data)
 
 if __name__ == "__main__":
-    print("\nRegistered routes:\n", app.url_map, "\n")
     app.run(debug=True)
